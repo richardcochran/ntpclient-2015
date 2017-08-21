@@ -145,10 +145,11 @@ int main(int argc, char ** argv)
 			"-t  tick:         %ld\n"
 			"    time.tv_sec:  %ld\n"
 			"    time.tv_usec: %ld\n"
+			"    tai:          %d\n"
 			"    return value: %d (%s)\n",
 		txc.constant,
 		txc.precision, txc.tolerance, txc.tick,
-		txc.time.tv_sec, txc.time.tv_usec, ret,
+		txc.time.tv_sec, txc.time.tv_usec, txc.tai, ret,
 		(ret >= 0 && ret <= 5) ? ret_code_descript[ret] : "error" );
 	}
 	return (ret<0);
