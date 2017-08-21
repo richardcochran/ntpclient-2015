@@ -69,7 +69,7 @@ static const char *ret_code_descript[] = {
 static void usage(char *prog)
 {
 	fprintf(stderr,
-		"Usage: %s [ -q ] [ -o offset ] [ -f frequency ] [ -p timeconstant ] [ -t tick ]\n",
+		"Usage: %s [ -q ] [ -o offset ] [ -f frequency ] [ -p timeconstant ] [ -t tick ] [ -T TAI-UTC offset ]\n",
 		prog);
 }
 
@@ -80,7 +80,7 @@ int main(int argc, char ** argv)
 	int c, i, ret, sep;
 	txc.modes=0;
 	for (;;) {
-		c = getopt( argc, argv, "qo:f:p:t:");
+		c = getopt( argc, argv, "qo:f:p:t:T:");
 		if (c == EOF) break;
 		switch (c) {
 			case 'q':
@@ -102,6 +102,10 @@ int main(int argc, char ** argv)
 				txc.tick = atoi(optarg);
 				txc.modes |= ADJ_TICK;
 				break;
+			case 'T':
+				txc.constant = atoi(optarg);
+				txc.modes |= ADJ_TAI;
+				break;
 			default:
 				usage(argv[0]);
 				exit(1);
@@ -109,6 +113,11 @@ int main(int argc, char ** argv)
 	}
 	if (argc != optind) { /* no valid non-option parameters */
 		usage(argv[0]);
+		exit(1);
+	}
+
+	if ((txc.modes & (ADJ_TIMECONST|ADJ_TAI)) == (ADJ_TIMECONST|ADJ_TAI)) {
+		fprintf(stderr, "Sorry, can't combine -p and -T\n");
 		exit(1);
 	}
 
